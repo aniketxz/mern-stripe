@@ -1,22 +1,18 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
 @layer base {
-  :root {
-    @apply font-sans text-base font-normal leading-relaxed antialiased 
-           text-white/90 bg-[#242424];
-  }
+	:root {
+		@apply font-sans text-base font-normal leading-relaxed antialiased 
+           text-white/90 bg-neutral-800;
+	}
 }
 
-@layer base {
-  button {
-    @apply rounded-lg border border-transparent px-5 py-2 text-base font-medium
-           bg-[#1a1a1a] cursor-pointer transition-colors duration-200;
-  }
-  button:hover {
-    @apply border-[#646cff];
-  }
-  button:focus,
-  button:focus-visible {
-    @apply outline-4 outline-[#646cff];
-  }
+@layer components {
+	.green-button {
+		@apply bg-emerald-700 hover:bg-emerald-600 text-white px-3 py-1 rounded-md font-medium transition duration-200 ease-in-out;
+	}
+
+	.gray-button {
+		@apply bg-gray-700 hover:bg-gray-600 text-white px-3 py-1 rounded-md font-medium transition duration-200 ease-in-out;
+	}
 }
