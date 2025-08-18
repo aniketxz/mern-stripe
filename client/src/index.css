@@ -1,18 +1,22 @@
-@import 'tailwindcss';
+@import "tailwindcss";
 
 @layer base {
-	:root {
-		@apply font-sans text-base font-normal leading-relaxed antialiased 
+  :root {
+    @apply font-sans text-base font-normal leading-relaxed antialiased 
            text-white/90 bg-neutral-800;
-	}
+  }
+
+  button {
+    @apply cursor-pointer;
+  }
 }
 
 @layer components {
-	.green-button {
-		@apply bg-emerald-700 hover:bg-emerald-600 text-white px-3 py-1 rounded-md font-medium transition duration-200 ease-in-out;
-	}
+  .green-button {
+    @apply bg-emerald-700 hover:bg-emerald-600 text-white px-3 py-1 rounded-md font-medium transition duration-200 ease-in-out;
+  }
 
-	.gray-button {
-		@apply bg-gray-700 hover:bg-gray-600 text-white px-3 py-1 rounded-md font-medium transition duration-200 ease-in-out;
-	}
+  .gray-button {
+    @apply bg-gray-700 hover:bg-gray-600 text-white px-3 py-1 rounded-md font-medium transition duration-200 ease-in-out;
+  }
 }
