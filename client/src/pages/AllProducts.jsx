@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import axios from "axios"
+import { apiService } from "../services/api"
 import { useCartStore } from "../store/cartStore"
 
 const AllProducts = () => {
@@ -11,8 +11,8 @@ const AllProducts = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const res = await axios.get("http://localhost:5000/api/products")
-        setProducts(res.data.products || [])
+        const data = await apiService.getProducts()
+        setProducts(data.products || [])
       } catch (err) {
         setError("Failed to load products")
         console.log(err.message)

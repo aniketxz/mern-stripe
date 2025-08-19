@@ -30,7 +30,6 @@ export const createOrder = async (req, res) => {
 			metadata: { orderId: order._id.toString() },
 			automatic_payment_methods: {
 				enabled: true,
-				allow_redirects: 'always',
 			},
 		})
 

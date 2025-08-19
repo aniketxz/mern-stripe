@@ -1,6 +1,16 @@
+import { useState } from "react"
+import { Elements } from "@stripe/react-stripe-js"
 import { useCartStore } from "../store/cartStore"
+import { apiService } from "../services/api"
+import stripePromise from "../config/stripe"
+import CheckoutForm from "../components/CheckoutForm"
 
 const Cart = () => {
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState("")
+  const [clientSecret, setClientSecret] = useState("")
+  const [orderId, setOrderId] = useState("")
+
   const cartItems = useCartStore((s) => s.cartItems)
   const addToCart = useCartStore((s) => s.addToCart)
   const removeFromCart = useCartStore((s) => s.removeFromCart)
@@ -8,6 +18,32 @@ const Cart = () => {
   const getCartTotalMinor = useCartStore((s) => s.getCartTotalMinor)
 
   const totalMinor = getCartTotalMinor()
+
+  const handleCheckout = async () => {
+    if (cartItems.length === 0) {
+      setError("Cart is empty")
+      return
+    }
+
+    try {
+      setLoading(true)
+      setError("")
+
+      // Create order and get payment intent
+      const orderData = await apiService.createOrder(cartItems)
+
+      if (!orderData.clientSecret) {
+        throw new Error("No client secret received from server")
+      }
+      setClientSecret(orderData.clientSecret)
+      setOrderId(orderData.orderId)
+      setLoading(false)
+    } catch (err) {
+      setError("Payment failed. Please try again.")
+      console.error("Payment error:", err)
+      setLoading(false)
+    }
+  }
 
   return (
     <div className='px-6 pb-12 max-w-5xl'>
@@ -66,19 +102,33 @@ const Cart = () => {
             </div>
           </div>
 
-          <div className='flex justify-end items-center gap-3'>
-            <button className='gray-button' onClick={clearCart}>
-              Clear Cart
-            </button>
-            <button
-              className='green-button'
-              onClick={() => {
-                /* integrate in next step */
-              }}
-            >
-              Proceed to Checkout
-            </button>
-          </div>
+          {error && <div className='p-3 text-red-300'>{error}</div>}
+
+          {!clientSecret ? (
+            <div className='flex justify-end items-center gap-3'>
+              <button className='gray-button' onClick={clearCart}>
+                Clear Cart
+              </button>
+              <button
+                className='green-button'
+                onClick={handleCheckout}
+                disabled={loading}
+              >
+                {loading ? "Processing..." : "Proceed to Checkout"}
+              </button>
+            </div>
+          ) : (
+            <div className='mt-6'>
+              <Elements stripe={stripePromise} options={{ clientSecret }}>
+                <CheckoutForm
+                  orderId={orderId}
+                  setError={setError}
+                  setLoading={setLoading}
+                  loading={loading}
+                />
+              </Elements>
+            </div>
+          )}
         </div>
       )}
     </div>
