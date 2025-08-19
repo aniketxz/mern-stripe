@@ -5,8 +5,13 @@ import { Order } from '../models/Order.model.js'
 export const createOrder = async (req, res) => {
   try {
     const stripe = new Stripe(process.env.STRIPE_SECRET_KEY)
-    const { products } = req.body
 
+    // setting req data to fit schema design before creating order
+    const products = req.body.products.map(p => ({
+      productId: p.id,
+      quantity: p.quantity,
+      price: p.price
+    }))
     const totalAmount = products.reduce((sum, item) => sum + item.price * item.quantity, 0)
 
     const order = await Order.create({
