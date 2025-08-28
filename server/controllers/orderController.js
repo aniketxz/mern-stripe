@@ -46,7 +46,7 @@ export const createOrder = async (req, res) => {
 	}
 }
 
-// get order by id
+// get order by Id
 export const getOrderById = async (req, res) => {
 	try {
 		const order = await Order.findById(req.params.id)
